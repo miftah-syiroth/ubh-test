@@ -8,19 +8,26 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Department extends Model
 {
-    use SoftDeletes;
+  use SoftDeletes;
 
-    protected $fillable = [
-        'name'
-    ];
+  protected $fillable = [
+    'name'
+  ];
 
-    /**
-     * Get all of the employees for the Department
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function employees(): HasMany
-    {
-        return $this->hasMany(Employee::class, 'department_id');
-    }
+  public function scopeFilter($query, array $filters)
+  {
+    $query->when($filters['search'] ?? null, function ($query, $search) {
+      $query->where('name', 'like', '%' . $search . '%');
+    });
+  }
+
+  /**
+   * Get all of the employees for the Department
+   *
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function employees(): HasMany
+  {
+    return $this->hasMany(Employee::class, 'department_id');
+  }
 }

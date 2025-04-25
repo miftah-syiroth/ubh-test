@@ -9,85 +9,85 @@ use Illuminate\Validation\Rule;
 
 class DepartmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $departments = Department::withCount('employees')->get();
-        return view('department.index', compact('departments'));
-    }
+  /**
+   * Display a listing of the resource.
+   */
+  public function index()
+  {
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('department.create');
-    }
+    return view('department.index');
+  }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'unique:departments']
-        ]);
+  /**
+   * Show the form for creating a new resource.
+   */
+  public function create()
+  {
+    return view('department.create');
+  }
 
-        Department::create($validated);
+  /**
+   * Store a newly created resource in storage.
+   */
+  public function store(Request $request)
+  {
+    $validated = $request->validate([
+      'name' => ['required', 'string', 'unique:departments']
+    ]);
 
-        return redirect()->route('departments.index')->with('success', 'Berhasil dibuat');
-    }
+    Department::create($validated);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        return view('department.show', [
-            'department' => Department::findOrFail($id),
-            'employees' => Employee::where('department_id', $id)->latest()->get()
-        ]);
+    return redirect()->route('departments.index')->with('success', 'Berhasil dibuat');
+  }
 
-        return view('deparment.show', compact('department', 'employees'));
-    }
+  /**
+   * Display the specified resource.
+   */
+  public function show(string $id)
+  {
+    return view('department.show', [
+      'department' => Department::findOrFail($id),
+      'employees' => Employee::where('department_id', $id)->latest()->get()
+    ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        return view('department.edit', [
-            'department' => Department::findOrFail($id),
-        ]);
+    return view('deparment.show', compact('department', 'employees'));
+  }
 
-        return view('deparment.edit', compact('department'));
-    }
+  /**
+   * Show the form for editing the specified resource.
+   */
+  public function edit(string $id)
+  {
+    return view('department.edit', [
+      'department' => Department::findOrFail($id),
+    ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $department = Department::findOrFail($id);
+    return view('deparment.edit', compact('department'));
+  }
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', Rule::unique('departments')->ignore($id)]
-        ]);
+  /**
+   * Update the specified resource in storage.
+   */
+  public function update(Request $request, string $id)
+  {
+    $department = Department::findOrFail($id);
 
-        $department->update($validated);
+    $validated = $request->validate([
+      'name' => ['required', 'string', Rule::unique('departments')->ignore($id)]
+    ]);
 
-        return redirect()->route('departments.index')->with('success', 'Berhasil diubah');
-    }
+    $department->update($validated);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        Department::findOrFail($id)->delete();
+    return redirect()->route('departments.index')->with('success', 'Berhasil diubah');
+  }
 
-        return redirect()->route('departments.index')->with('success', 'Berhasil dihapus');
-    }
+  /**
+   * Remove the specified resource from storage.
+   */
+  public function destroy(string $id)
+  {
+    Department::findOrFail($id)->delete();
+
+    return redirect()->route('departments.index')->with('success', 'Berhasil dihapus');
+  }
 }

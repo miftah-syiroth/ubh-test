@@ -32,7 +32,7 @@ class DepartmentController extends Controller
   public function store(Request $request)
   {
     $validated = $request->validate([
-      'name' => ['required', 'string', 'unique:departments']
+      'name' => ['required', 'string', Rule::unique('departments')->withoutTrashed()]
     ]);
 
     Department::create($validated);
@@ -49,8 +49,6 @@ class DepartmentController extends Controller
       'department' => Department::findOrFail($id),
       'employees' => Employee::where('department_id', $id)->latest()->get()
     ]);
-
-    return view('deparment.show', compact('department', 'employees'));
   }
 
   /**
@@ -61,8 +59,6 @@ class DepartmentController extends Controller
     return view('department.edit', [
       'department' => Department::findOrFail($id),
     ]);
-
-    return view('deparment.edit', compact('department'));
   }
 
   /**

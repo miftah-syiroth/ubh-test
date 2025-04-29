@@ -11,7 +11,8 @@ class Department extends Model
   use SoftDeletes;
 
   protected $fillable = [
-    'name'
+    'name',
+    'deleted_at'
   ];
 
   public function scopeFilter($query, array $filters)
